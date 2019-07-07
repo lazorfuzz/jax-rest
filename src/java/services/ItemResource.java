@@ -1,0 +1,84 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package services;
+
+import javax.ws.rs.core.Context;
+import javax.ws.rs.core.UriInfo;
+import javax.ws.rs.Produces;
+import javax.ws.rs.Consumes;
+import javax.ws.rs.DELETE;
+import javax.ws.rs.GET;
+import javax.ws.rs.Path;
+import javax.ws.rs.PUT;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.core.MediaType;
+
+/**
+ * REST Web Service
+ *
+ * @author leon
+ */
+@Path("items")
+public class ItemResource {
+
+    @Context
+    private UriInfo context;
+    
+    JSONHelper JsonHelper;
+    /**
+     * Creates a new instance of ItemResource
+     */
+    public ItemResource() {
+        JsonHelper = new JSONHelper();
+    }
+
+    /**
+     * Retrieves representation of an instance of services.ItemResource
+     * @return an instance of java.lang.String
+     */
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    public String getJson() {
+        return JsonHelper.objToJSON();
+    }
+    
+    /**
+     * Retrieves representation of a specific instance of services.ItemResource
+     * @param id
+     * @return an instance of java.lang.String
+     */
+    @GET
+    @Path("{id}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public String getItemJson(@PathParam("id") int id) {
+        String item = JsonHelper.getItemJSONById(id);
+        if (item == null) return "{}";
+        return item;
+    }
+
+    /**
+     * PUT method for updating or creating an instance of ItemResource
+     * @param content representation for the resource
+     * @param id
+     */
+    @PUT
+    @Path("{id}")
+    @Consumes(MediaType.APPLICATION_JSON)
+    public void putJson(String content, @PathParam("id") int id) {
+        JsonHelper.update(id, content);
+    }
+    
+    /**
+     * DELETE method for deleting an item
+     * @param id
+     */
+    @DELETE
+    @Path("{id}")
+    public void deleteJson(@PathParam("id") int id) {
+        System.out.println("Processing DELETE");
+        JsonHelper.delete(id);
+    }
+}
